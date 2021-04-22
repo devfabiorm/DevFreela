@@ -1,5 +1,6 @@
 ﻿using DevFreela.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace DevFreela.API.Controllers
 {
@@ -7,6 +8,13 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
+        private readonly OpenedHoursOption _options;
+
+        public ProjectsController(IOptions<OpenedHoursOption> options)
+        {
+            _options = options.Value;
+        }
+
         [HttpGet]
         public IActionResult Get(string query)
         {
