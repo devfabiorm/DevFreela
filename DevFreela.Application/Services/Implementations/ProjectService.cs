@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DevFreela.Application.Services.Implementations
 {
-    class ProjectService : IProjectService
+    public class ProjectService : IProjectService
     {
         private readonly DevFreelaDbContext _dbContext;
 
@@ -50,7 +50,7 @@ namespace DevFreela.Application.Services.Implementations
         public List<ProjectViewModel> GetAll(string query)
         {
             var projects = _dbContext.Projects
-                .Select(p => new ProjectViewModel(p.Title, p.CreatedAt))
+                .Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt))
                 .ToList();
 
             return projects;
@@ -59,6 +59,8 @@ namespace DevFreela.Application.Services.Implementations
         public ProjectDetailsViewModel GetById(int id)
         {
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
+
+            if (project == null) return null;
 
             var projectDetailViewModel = new ProjectDetailsViewModel(
                 project.Id,

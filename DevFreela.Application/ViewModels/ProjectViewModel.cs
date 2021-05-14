@@ -4,7 +4,7 @@ namespace DevFreela.Application.ViewModels
 {
     public class ProjectViewModel
     {
-        public ProjectViewModel(string title, DateTime createdAt, int id)
+        public ProjectViewModel(int id, string title, DateTime createdAt)
         {
             Id = id;
             Title = title;
