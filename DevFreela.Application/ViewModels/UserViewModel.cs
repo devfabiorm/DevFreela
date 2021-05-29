@@ -1,4 +1,6 @@
-﻿namespace DevFreela.Application.ViewModels
+﻿using System;
+
+namespace DevFreela.Application.ViewModels
 {
     public class UserViewModel
     {

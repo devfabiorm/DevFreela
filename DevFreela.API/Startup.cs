@@ -27,6 +27,7 @@ namespace DevFreela.API
             var connectionString = Configuration.GetConnectionString("DevFreelaCs");
             services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.Configure<OpenedHoursOption>(Configuration.GetSection("OpenedHours"));
             services.AddControllers();
