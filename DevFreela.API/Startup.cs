@@ -1,14 +1,15 @@
-using DevFreela.API.Models;
-using DevFreela.Application.Services.Interfaces;
+using DevFreela.Application.Commands.CreateProject;
 using DevFreela.Application.Services.Implementations;
+using DevFreela.Application.Services.Interfaces;
 using DevFreela.Infrastructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.API
 {
@@ -29,7 +30,7 @@ namespace DevFreela.API
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IUserService, UserService>();
 
-            services.Configure<OpenedHoursOption>(Configuration.GetSection("OpenedHours"));
+            services.AddMediatR(typeof(CreateProjectCommand));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
