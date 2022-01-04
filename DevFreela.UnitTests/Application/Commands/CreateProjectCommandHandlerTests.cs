@@ -16,29 +16,26 @@ namespace DevFreela.UnitTests.Application.Commands
         public async Task ThreeProjectsExist_Executed_ReturnThreeProjectViewModels()
         {
             //Arrange
-            var projects = new List<Project>
+            var projectRepositoryMock = new Mock<IProjectRepository>();
+
+            var createProjectCommand = new CreateProjectCommand 
             {
-                new Project("Title 1", "Description 1", 1, 1, 10000),
-                new Project("Title 2", "Description 2", 2, 2, 10000),
-                new Project("Title 3", "Description 3", 3, 3, 10000)
+                Title = "Titulo de Test",
+                Description = "Descrição de Teste",
+                ClientId = 1,
+                FreelancerId = 1,
+                TotalCost = 10000
             };
 
-            var projectRepositoryMock = new Mock<IProjectRepository>();
-            projectRepositoryMock.Setup(pr => pr.GetAllAsync())
-                .ReturnsAsync(projects);
+            var createProjectCommandHandler = new CreateProjectCommandHandler(projectRepositoryMock.Object);
 
-            var getAllProjectsQuery = new GetAllProjectsQuery("query");
-            var getAllProjectsQueryHandler = new GetAllProjectsQueryHandler(projectRepositoryMock.Object);
-
-            //Act
-            var projectViewModelList = await getAllProjectsQueryHandler.Handle(getAllProjectsQuery, new CancellationToken());
+            //Acts
+            var id = await createProjectCommandHandler.Handle(createProjectCommand, new CancellationToken());
 
             //Assert
-            Assert.NotNull(projectViewModelList);
-            Assert.NotEmpty(projectViewModelList);
-            Assert.Equal(projects.Count, projectViewModelList.Count);
+            Assert.True(id >= 0);
 
-            projectRepositoryMock.Verify(pr => pr.GetAllAsync(), Times.Once);
+            projectRepositoryMock.Verify(pr => pr.CreateAsync(It.IsAny<Project>()), Times.Once);
         }
     }
 }
