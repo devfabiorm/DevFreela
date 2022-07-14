@@ -4,6 +4,8 @@ using DevFreela.Application.Validators;
 using DevFreela.Core.Repositories;
 using DevFreela.Core.Services;
 using DevFreela.Infrastructure.Auth;
+using DevFreela.Infrastructure.MessageBus;
+using DevFreela.Infrastructure.Payments;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
 using FluentValidation.AspNetCore;
@@ -38,10 +40,12 @@ namespace DevFreela.API
 
             services.AddHttpClient();
 
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISkillRepository, SkillRepository>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IMessageBusService, MessageBusService>();
 
             services.AddMediatR(typeof(CreateProjectCommand));
             services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter)))
