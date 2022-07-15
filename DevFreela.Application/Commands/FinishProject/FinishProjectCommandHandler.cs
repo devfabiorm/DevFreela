@@ -22,18 +22,15 @@ namespace DevFreela.Application.Commands.FinishProject
         {
             var project = await _projectrepository.GetByIdAsync(request.Id);
 
-            project.Finish();
-
             var paymentInfoDto = new PaymentInfoDTO(request.Id, request.CreditCardNumber, request.Cvv, request.ExpiresAt, request.FullName);
 
-            var result = await _paymentService.ProcessPayment(paymentInfoDto);
-
-            if (!result)
-                project.SetPaymentPending();
+            _paymentService.ProcessPayment(paymentInfoDto);
+  
+            project.SetPaymentPending();
 
             await _projectrepository.SaveChangesAsync();
 
-            return result;
+            return true;
         }
     }
 }
