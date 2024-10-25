@@ -7,6 +7,7 @@ using DevFreela.Infrastructure.Auth;
 using DevFreela.Infrastructure.MessageBus;
 using DevFreela.Infrastructure.Payments;
 using DevFreela.Infrastructure.Persistence;
+using DevFreela.Infrastructure.Persistence.Migrations;
 using DevFreela.Infrastructure.Persistence.Repositories;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -119,6 +120,13 @@ namespace DevFreela.API
             {
                 endpoints.MapControllers();
             });
+
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            
+            DataMigration.MigrateDatabase(serviceScope.ServiceProvider);
+            
         }
+
+        
     }
 }
