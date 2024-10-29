@@ -6,9 +6,12 @@ using DevFreela.Application.Commands.StartProject;
 using DevFreela.Application.Commands.UpdateProject;
 using DevFreela.Application.Queries.GetAllProjects;
 using DevFreela.Application.Queries.GetProjectById;
+using DevFreela.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
@@ -26,6 +29,8 @@ namespace DevFreela.API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "client, freelancer")]
+        [ProducesResponseType(typeof(List<ProjectViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string query)
         {
             var getAllProjectsQuery = new GetAllProjectsQuery(query);
@@ -36,6 +41,8 @@ namespace DevFreela.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "client, freelancer")]
+        [ProducesResponseType(typeof(ProjectDetailsViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
             var getProjectById = new GetProjectByIdQuery(id);
@@ -52,6 +59,7 @@ namespace DevFreela.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "client")]
+        [ProducesResponseType(typeof(CreateProjectCommand), StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateProjectCommand command)
         {
             var id = await _mediator.Send(command);
@@ -61,6 +69,7 @@ namespace DevFreela.API.Controllers
 
         [HttpPut("{îd}")]
         [Authorize(Roles = "client")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateProjectCommand command)
         {
             await _mediator.Send(command);
@@ -70,6 +79,7 @@ namespace DevFreela.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "client")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id)
         {
             var command = new DeleteProjectCommand(id);
